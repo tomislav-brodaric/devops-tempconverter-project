@@ -57,7 +57,7 @@ Create the runtime Secret. The helper generates three independent random
 hexadecimal values without printing them:
 
 ```sh
-sh deploy/kubernetes/create-secrets.sh create tempconverter
+sh deploy/kubernetes/create-secrets.sh tempconverter
 ```
 
 Validate and apply the deployment:
@@ -190,24 +190,15 @@ stopped, and a tested rollback procedure. Review that plan separately before
 changing an existing cluster. Never delete the namespace, PVC, PV, runtime
 Secret, k3d cluster, or outer Podman volumes as part of a normal deployment.
 
-## Secret helper modes
+## Secret helper boundary
 
-Fresh cluster:
-
-```sh
-sh deploy/kubernetes/create-secrets.sh create tempconverter
-```
-
-Existing file-backed Secret during this one-time migration:
+For a fresh cluster, pass the target namespace:
 
 ```sh
-sh deploy/kubernetes/create-secrets.sh normalize tempconverter
+sh deploy/kubernetes/create-secrets.sh tempconverter
 ```
 
-The `normalize` mode removes trailing line endings from the three expected
-hexadecimal values, verifies their lengths, and updates the same Secret without
-printing a value. It is only for a separately reviewed migration of an existing
-lab. The helper refuses to overwrite an existing Secret in `create` mode.
-Secret rotation is a separate database-administration operation because
-changing the Kubernetes value alone does not change a password stored inside
-an initialized MySQL data directory.
+The helper refuses to overwrite an existing Secret. Secret rotation is a
+separate database-administration operation because changing the Kubernetes
+value alone does not change a password stored inside an initialized MySQL data
+directory.

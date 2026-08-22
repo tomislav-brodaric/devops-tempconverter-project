@@ -3,23 +3,10 @@
 set -eu
 set +x
 
-mode="create"
-namespace="tempconverter"
+namespace="${1:-tempconverter}"
 secret_name="tempconverter-runtime"
 temp_dir=""
 random_source=""
-
-case "${1:-}" in
-    create | normalize)
-        mode="$1"
-        namespace="${2:-tempconverter}"
-        ;;
-    "")
-        ;;
-    *)
-        namespace="$1"
-        ;;
-esac
 
 cleanup() {
     if [ -n "$temp_dir" ] && [ -d "$temp_dir" ]; then
@@ -61,30 +48,6 @@ write_random_hex() {
     unset random_value
 }
 
-normalize_key() {
-    key="$1"
-    expected_length="$2"
-    encoded_value="$(
-        kubectl get secret "$secret_name" \
-            --namespace "$namespace" \
-            --output "jsonpath={.data['$key']}"
-    )"
-
-    [ -n "$encoded_value" ] || fail "missing-secret-key-$key"
-
-    if ! decoded_value="$(printf '%s' "$encoded_value" | base64 -d)"; then
-        fail "invalid-secret-key-$key"
-    fi
-    unset encoded_value
-
-    # POSIX command substitution removes trailing line endings only.
-    printf '%s' "$decoded_value" >"$temp_dir/$key"
-    unset decoded_value
-    actual_length="$(wc -c <"$temp_dir/$key" | tr -d '[:space:]')"
-    [ "$actual_length" -eq "$expected_length" ] ||
-        fail "unexpected-secret-key-length-$key"
-}
-
 trap cleanup EXIT HUP INT TERM
 require_command kubectl
 
@@ -93,32 +56,6 @@ kubectl get namespace "$namespace" >/dev/null 2>&1 ||
 
 umask 077
 temp_dir="$(mktemp -d "${TMPDIR:-/tmp}/tempconverter-secrets.XXXXXX")"
-
-if [ "$mode" = "normalize" ]; then
-    require_command base64
-    require_command tr
-    require_command wc
-
-    kubectl get secret "$secret_name" \
-        --namespace "$namespace" >/dev/null 2>&1 ||
-        fail "secret-not-found"
-
-    normalize_key db-password 64
-    normalize_key db-root-password 64
-    normalize_key flask-secret-key 96
-
-    kubectl create secret generic "$secret_name" \
-        --namespace "$namespace" \
-        --from-file="db-password=$temp_dir/db-password" \
-        --from-file="db-root-password=$temp_dir/db-root-password" \
-        --from-file="flask-secret-key=$temp_dir/flask-secret-key" \
-        --dry-run=client \
-        --output=yaml |
-        kubectl apply --filename=- >/dev/null
-
-    echo "secret=$secret_name namespace=$namespace status=normalized-for-env"
-    exit 0
-fi
 
 if kubectl get secret "$secret_name" \
     --namespace "$namespace" >/dev/null 2>&1; then

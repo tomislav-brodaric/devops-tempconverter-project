@@ -146,5 +146,4 @@ python .\scripts\summarize_resources.py `
 - [`scripts/load_health.js`](../../scripts/load_health.js)
 - [`scripts/summarize_resources.py`](../../scripts/summarize_resources.py)
 
-The earlier 2026-07-28 measurement remains available as a clearly marked
-historical baseline; it is not used as the result for the current image.
+This 2026-08-21 set is the single assignment-facing measurement result.

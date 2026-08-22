@@ -191,7 +191,7 @@ The repository contains a PowerShell sampler, a small HTTP load generator and
 a Python summarizer. The current image measurement and its limitations are
 documented in
 [`docs/measurements/2026-08-21-resource-comparison.md`](docs/measurements/2026-08-21-resource-comparison.md).
-The earlier 2026-07-28 result remains clearly marked as a historical baseline.
+This is the single assignment-facing resource measurement result.
 
 The comparison is intentionally modest: it contrasts the app/database
 container workload with the complete Podman Machine working set. It is not a
@@ -253,7 +253,6 @@ The recorded comparison is in
 |   |-- swarm/                 Swarm stack, Nginx config and instructions
 |   `-- kubernetes/            Kubernetes manifests and instructions
 |-- docs/                      measurements and dated technical evidence
-|-- migrations/                retained schema-upgrade notes
 |-- scripts/                   measurement and load utilities
 |-- templates/index.html       application interface
 `-- tests/                     4 unit/route + 2 MySQL integration tests
