@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TempConverter</title>
+  </head>
+  <body>
+    <h1>Celsius to Fahrenheit Converter</h1>
+    <p>
+      Hosted by student {{ student }} attending {{ college }}.
+    </p>
+    <form method="POST">
+      {{ form.csrf_token }}
+      {{ form.celsius.label }} {{ form.celsius() }}
+      {% for error in form.celsius.errors %}
+        <span role="alert">{{ error }}</span>
+      {% endfor %}
+      {{ form.submit() }}
+    </form>
+    {% if log_entries %}
+      <h2>Recent Conversions:</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Celsius</th>
+            <th>Fahrenheit</th>
+            <th>IP Address</th>
+            <th>User Agent</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entry in log_entries %}
+            <tr>
+              <td>{{ entry[0] }}</td>
+              <td>{{ entry[1] }}</td>
+              <td>{{ entry[2] }}</td>
+              <td>{{ entry[3] }}</td>
+              <td>{{ entry[4] }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+  </body>
+</html>

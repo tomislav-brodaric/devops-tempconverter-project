@@ -1,0 +1,26 @@
+__pycache__/
+instance/
+.env
+.env.*
+!.env.example
+.pytest_cache/
+.venv/
+docs/reference/
+
+# Local report, recording, browser-profile, OBS, and render artifacts are
+# intentionally kept outside the public source release.
+project-report/
+tmp/
+output/
+PROJECT_WORKLOG.md
+
+# Recording work products remain outside the public source history.
+docs/*handoff*.md
+docs/2026-08-15-pravo-snimanje-korak-po-korak.md
+docs/TempConverter-prirucnik-za-snimanje-komande.docx
+docs/TempConverter-prirucnik-za-snimanje-komande.pdf
+docs/manual-recording-runbook-hr.md
+docs/video-demo-scenario.md
+docs/video-rehearsal-live-log-hr.md
+docs/video-transcript-hr.md
+scripts/video_demo_helpers.ps1

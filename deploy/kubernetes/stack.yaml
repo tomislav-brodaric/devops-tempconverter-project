@@ -1,0 +1,185 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-data-tempconverter-db-0
+  namespace: tempconverter
+  labels:
+    app.kubernetes.io/name: tempconverter
+    app.kubernetes.io/component: database
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tempconverter-db
+  namespace: tempconverter
+  labels:
+    app.kubernetes.io/name: tempconverter
+    app.kubernetes.io/component: database
+spec:
+  clusterIP: None
+  ports:
+    - name: mysql
+      port: 3306
+      targetPort: mysql
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: tempconverter
+    app.kubernetes.io/component: database
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tempconverter-db
+  namespace: tempconverter
+  labels:
+    app.kubernetes.io/name: tempconverter
+    app.kubernetes.io/component: database
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tempconverter
+      app.kubernetes.io/component: database
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: tempconverter
+        app.kubernetes.io/component: database
+    spec:
+      containers:
+        - name: mysql
+          image: docker.io/library/mysql:8.4
+          ports:
+            - name: mysql
+              containerPort: 3306
+              protocol: TCP
+          env:
+            - name: MYSQL_DATABASE
+              value: tempconverter
+            - name: MYSQL_USER
+              value: tempconverter
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: tempconverter-runtime
+                  key: db-password
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: tempconverter-runtime
+                  key: db-root-password
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: mysql-data-tempconverter-db-0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tempconverter-app
+  namespace: tempconverter
+  labels:
+    app.kubernetes.io/name: tempconverter
+    app.kubernetes.io/component: application
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: tempconverter
+    app.kubernetes.io/component: application
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tempconverter-app
+  namespace: tempconverter
+  labels:
+    app.kubernetes.io/name: tempconverter
+    app.kubernetes.io/component: application
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tempconverter
+      app.kubernetes.io/component: application
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: tempconverter
+        app.kubernetes.io/component: application
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: tempconverter
+                  app.kubernetes.io/component: application
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - name: app
+          image: docker.io/tomislavb16/tempconverter:dev
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+          env:
+            - name: DB_USER
+              value: tempconverter
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: tempconverter-runtime
+                  key: db-password
+            - name: DB_HOST
+              value: tempconverter-db
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_NAME
+              value: tempconverter
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: tempconverter-runtime
+                  key: flask-secret-key
+            - name: STUDENT
+              value: Tomislav Brodarić
+            - name: COLLEGE
+              value: Algebra Bernays University
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tempconverter
+  namespace: tempconverter
+  labels:
+    app.kubernetes.io/name: tempconverter
+spec:
+  ingressClassName: traefik
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: tempconverter-app
+                port:
+                  name: http

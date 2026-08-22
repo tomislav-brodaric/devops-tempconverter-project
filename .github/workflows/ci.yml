@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-build:
+    name: Test application and build image
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      mysql:
+        image: mysql:8.4
+        # Disposable credentials for this job's temporary database only.
+        env:
+          MYSQL_DATABASE: tempconverter_test
+          MYSQL_USER: tempconverter_test
+          MYSQL_PASSWORD: ci_test_password
+          MYSQL_ROOT_PASSWORD: ci_root_test_password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --host=127.0.0.1 --user=root --password=ci_root_test_password"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+          --health-start-period=15s
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install requirements
+        run: python -m pip install --requirement requirements.txt
+
+      - name: Run four unit and route tests
+        run: python -m unittest discover -s tests/unit -p "test_*.py" -v
+
+      - name: Run two MySQL integration tests
+        env:
+          TEST_DATABASE_URL: mysql+pymysql://tempconverter_test:ci_test_password@127.0.0.1:3306/tempconverter_test
+        run: python -m unittest discover -s tests/integration -t . -p "test_*.py" -v
+
+      - name: Build container image
+        run: docker build --file Dockerfile --tag tempconverter:ci .

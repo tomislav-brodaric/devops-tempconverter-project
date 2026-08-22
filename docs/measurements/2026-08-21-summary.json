@@ -1,0 +1,219 @@
+{
+  "quality_checks": {
+    "idle_rows": 10,
+    "load_rows": 10,
+    "idle_scenario_valid": true,
+    "load_scenario_valid": true,
+    "sample_sequences_valid": true,
+    "timestamps_strictly_increasing": true,
+    "numeric_values_finite_and_nonnegative": true,
+    "http_failures": 0
+  },
+  "idle": {
+    "app_cpu_percent": {
+      "mean": 0.028,
+      "median": 0.026,
+      "min": 0.021,
+      "max": 0.041,
+      "p95_nearest_rank": 0.041
+    },
+    "app_memory_mib": {
+      "mean": 95.2,
+      "median": 95.2,
+      "min": 95.2,
+      "max": 95.2,
+      "p95_nearest_rank": 95.2
+    },
+    "app_pids": {
+      "mean": 1.0,
+      "median": 1.0,
+      "min": 1.0,
+      "max": 1.0,
+      "p95_nearest_rank": 1.0
+    },
+    "db_cpu_percent": {
+      "mean": 1.476,
+      "median": 1.018,
+      "min": 0.832,
+      "max": 2.609,
+      "p95_nearest_rank": 2.609
+    },
+    "db_memory_mib": {
+      "mean": 452.3,
+      "median": 452.2,
+      "min": 452.1,
+      "max": 453.2,
+      "p95_nearest_rank": 453.2
+    },
+    "db_pids": {
+      "mean": 53.1,
+      "median": 53.0,
+      "min": 53.0,
+      "max": 54.0,
+      "p95_nearest_rank": 54.0
+    },
+    "containers_cpu_percent_total": {
+      "mean": 1.504,
+      "median": 1.045,
+      "min": 0.869,
+      "max": 2.631,
+      "p95_nearest_rank": 2.631
+    },
+    "containers_memory_mib_total": {
+      "mean": 547.5,
+      "median": 547.4,
+      "min": 547.3,
+      "max": 548.4,
+      "p95_nearest_rank": 548.4
+    },
+    "containers_pids_total": {
+      "mean": 54.1,
+      "median": 54.0,
+      "min": 54.0,
+      "max": 55.0,
+      "p95_nearest_rank": 55.0
+    },
+    "vm_cpu_percent": {
+      "mean": 90.5,
+      "median": 74.0,
+      "min": 38.0,
+      "max": 240.0,
+      "p95_nearest_rank": 240.0
+    },
+    "vm_working_set_mib": {
+      "mean": 6626.482,
+      "median": 6625.959,
+      "min": 6625.41,
+      "max": 6629.328,
+      "p95_nearest_rank": 6629.328
+    },
+    "vm_private_mib": {
+      "mean": 14066.165,
+      "median": 14065.285,
+      "min": 14064.781,
+      "max": 14068.598,
+      "p95_nearest_rank": 14068.598
+    }
+  },
+  "load": {
+    "app_cpu_percent": {
+      "mean": 185.748,
+      "median": 188.129,
+      "min": 167.909,
+      "max": 209.27,
+      "p95_nearest_rank": 209.27
+    },
+    "app_memory_mib": {
+      "mean": 100.69,
+      "median": 100.45,
+      "min": 100.1,
+      "max": 102.1,
+      "p95_nearest_rank": 102.1
+    },
+    "app_pids": {
+      "mean": 8.9,
+      "median": 9.0,
+      "min": 7.0,
+      "max": 12.0,
+      "p95_nearest_rank": 12.0
+    },
+    "db_cpu_percent": {
+      "mean": 17.985,
+      "median": 17.912,
+      "min": 17.192,
+      "max": 19.01,
+      "p95_nearest_rank": 19.01
+    },
+    "db_memory_mib": {
+      "mean": 453.41,
+      "median": 453.4,
+      "min": 452.4,
+      "max": 454.6,
+      "p95_nearest_rank": 454.6
+    },
+    "db_pids": {
+      "mean": 53.0,
+      "median": 53.0,
+      "min": 53.0,
+      "max": 53.0,
+      "p95_nearest_rank": 53.0
+    },
+    "containers_cpu_percent_total": {
+      "mean": 203.733,
+      "median": 206.189,
+      "min": 186.067,
+      "max": 227.146,
+      "p95_nearest_rank": 227.146
+    },
+    "containers_memory_mib_total": {
+      "mean": 554.1,
+      "median": 554.3,
+      "min": 552.5,
+      "max": 556.0,
+      "p95_nearest_rank": 556.0
+    },
+    "containers_pids_total": {
+      "mean": 61.9,
+      "median": 62.0,
+      "min": 60.0,
+      "max": 65.0,
+      "p95_nearest_rank": 65.0
+    },
+    "vm_cpu_percent": {
+      "mean": 467.3,
+      "median": 468.0,
+      "min": 393.0,
+      "max": 544.0,
+      "p95_nearest_rank": 544.0
+    },
+    "vm_working_set_mib": {
+      "mean": 6650.485,
+      "median": 6650.631,
+      "min": 6647.633,
+      "max": 6652.559,
+      "p95_nearest_rank": 6652.559
+    },
+    "vm_private_mib": {
+      "mean": 14100.365,
+      "median": 14100.045,
+      "min": 14083.309,
+      "max": 14114.844,
+      "p95_nearest_rank": 14114.844
+    }
+  },
+  "http_load": {
+    "target": "http://127.0.0.1:5600/health",
+    "requested_duration_seconds": 40,
+    "elapsed_seconds": 40.028,
+    "concurrency": 10,
+    "total_requests": 10756,
+    "successful_requests": 10756,
+    "failed_requests": 0,
+    "requests_per_second": 268.713,
+    "status_codes": {
+      "200": 10756
+    },
+    "latency_ms": {
+      "mean": 37.178,
+      "p50": 33.788,
+      "p95": 54.82,
+      "p99": 122.128,
+      "max": 177.148
+    }
+  },
+  "comparisons": {
+    "container_cpu_mean_load_to_idle_ratio": 135.461,
+    "vm_cpu_mean_load_to_idle_ratio": 5.164,
+    "container_memory_mean_load_minus_idle_mib": 6.6,
+    "vm_working_set_mean_load_minus_idle_mib": 24.003,
+    "vm_to_container_memory_mean_ratio_idle": 12.103,
+    "vm_to_container_memory_mean_ratio_load": 12.002,
+    "app_share_of_container_load_cpu_mean": 0.912
+  },
+  "methodology": {
+    "container_cpu": "delta(CPUNano) / delta(SystemNano) * 100; 100 percent equals one fully utilized CPU core",
+    "container_memory": "Podman cgroup usage, app plus DB",
+    "vm_cpu_and_memory": "Windows Win32_PerfFormattedData_PerfProc_Process for vmmemWSL",
+    "p95": "nearest-rank percentile"
+  }
+}

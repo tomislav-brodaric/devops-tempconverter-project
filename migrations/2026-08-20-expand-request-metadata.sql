@@ -1,0 +1,3 @@
+ALTER TABLE temperature
+    MODIFY COLUMN ip_address VARCHAR(45) NOT NULL,
+    MODIFY COLUMN user_agent VARCHAR(255) NOT NULL;
