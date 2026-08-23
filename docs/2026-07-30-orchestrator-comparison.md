@@ -60,7 +60,7 @@ used more resources than the smaller Swarm lab for the same application.
 
 ## Troubleshooting lessons
 
-Three issues from the local labs directly shaped the final templates:
+Two issues from the local labs directly shaped the final templates:
 
 1. **The application could start before MySQL was ready.** Early connections
    failed even though both containers were running. The local Compose file now
@@ -71,12 +71,6 @@ Three issues from the local labs directly shaped the final templates:
    three Docker nodes run inside one Podman Machine, so a small global Nginx
    service publishes port 80 on each node and forwards to the DNSRR app tasks.
    Health checks on all three mapped node ports verify the workaround.
-3. **The existing Kubernetes Secret format did not match direct environment
-   injection.** Earlier file-backed values contained trailing line endings.
-   The Secret helper can normalize those values without printing them, while
-   the PVC and logical database passwords remain unchanged. A live transition
-   still requires backup and rollback checks.
-
 ## Simpler-environment recommendation
 
 Choose Swarm when the environment is small, Docker Engine is already in use,
